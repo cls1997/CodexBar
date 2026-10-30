@@ -138,7 +138,7 @@ enum ClaudeOAuthUsageFetcher {
     }
 
     static func usageSessionConfiguration() -> URLSessionConfiguration {
-        let configuration = URLSessionConfiguration.ephemeral
+        let configuration = ApplicationNetworkProxy.configuration(.ephemeral)
         configuration.timeoutIntervalForResource = 90
         // Grant identifiers in the raw response must never enter the URL cache.
         configuration.urlCache = nil

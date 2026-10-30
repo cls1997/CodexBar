@@ -98,7 +98,7 @@ struct ReplicateWebFetchStrategy: ProviderFetchStrategy {
     }
 
     private static func fetchUsage(cookieHeader: String) async throws -> UsageSnapshot {
-        let configuration = URLSessionConfiguration.ephemeral
+        let configuration = ApplicationNetworkProxy.configuration(.ephemeral)
         configuration.httpCookieStorage = nil
         configuration.httpShouldSetCookies = false
         let session = ProviderHTTPClient.redirectGuardedSession(configuration: configuration)

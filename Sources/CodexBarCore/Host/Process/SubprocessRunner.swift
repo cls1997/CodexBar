@@ -167,9 +167,9 @@ public enum SubprocessRunner {
         var launchEnvironment = environment
         launchEnvironment["PATH"] = PathBuilder.effectivePATH(purposes: [.tty], env: environment, loginPATH: nil)
         let ownership = reapDescendants ? ProcessOwnershipReaper() : nil
-        process.environment = ownership
+        process.environment = ApplicationNetworkProxy.childEnvironment(ownership
             .map { launchEnvironment.merging([ProcessOwnershipReaper.environmentKey: $0.marker]) { _, new in new } } ??
-            launchEnvironment
+            launchEnvironment)
         process.currentDirectoryURL = currentDirectoryURL
 
         let stdoutPipe = Pipe()

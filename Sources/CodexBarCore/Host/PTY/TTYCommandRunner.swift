@@ -1192,7 +1192,7 @@ extension TTYCommandRunner {
         if env["CI"] == nil {
             env["CI"] = "0"
         }
-        return env
+        return ApplicationNetworkProxy.childEnvironment(env)
     }
 }
 

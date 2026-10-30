@@ -175,7 +175,7 @@ public final class ProviderHTTPClient: ProviderHTTPTransport, @unchecked Sendabl
     }
 
     static func defaultConfiguration() -> URLSessionConfiguration {
-        let configuration = URLSessionConfiguration.default
+        let configuration = ApplicationNetworkProxy.configuration(.default)
         configuration.timeoutIntervalForRequest = 30
         configuration.timeoutIntervalForResource = 90
         #if !os(Linux)
@@ -249,7 +249,10 @@ final class ProviderHTTPRedirectGuardDelegate: NSObject, URLSessionTaskDelegate,
 /// Owns one ephemeral session per request while the provider retains its redirect policy.
 struct ProviderHTTPSessionFactory: Sendable {
     var makeSession: @Sendable (URLSessionTaskDelegate?) -> URLSession = { delegate in
-        URLSession(configuration: .ephemeral, delegate: delegate, delegateQueue: nil)
+        URLSession(
+            configuration: ApplicationNetworkProxy.configuration(.ephemeral),
+            delegate: delegate,
+            delegateQueue: nil)
     }
 
     var finishSession: @Sendable (URLSession) -> Void = { $0.finishTasksAndInvalidate() }

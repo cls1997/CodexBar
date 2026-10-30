@@ -73,7 +73,8 @@ extension StatusItemController {
     }
 
     func fleetAccountProjection(for provider: UsageProvider) -> FleetAccountMenuProjection {
-        guard self.settings.iCloudSyncEnabled,
+        guard CloudSyncFeature.isEnabled,
+              self.settings.iCloudSyncEnabled,
               self.settings.iCloudSyncSnapshotsEnabled,
               self.settings.iCloudSyncShowFleetAccounts
         else {

@@ -38,13 +38,14 @@ final class CloudSyncCoordinator {
     }
 
     func start() {
-        self.observeSettings()
         self.preferencesImportObserver = DistributedNotificationCenter.default().addObserver(
             forName: Notification.Name(PreferencesDocument.importNotification), object: nil, queue: .main)
         { [weak self] _ in
             MainActor.assumeIsolated { self?.settings.consumePendingPreferencesImport() }
         }
         self.settings.consumePendingPreferencesImport()
+        guard CloudSyncFeature.isEnabled else { return }
+        self.observeSettings()
         self.configObserver = NotificationCenter.default.addObserver(
             forName: .codexbarProviderConfigDidChange,
             object: self.settings,
@@ -87,6 +88,7 @@ final class CloudSyncCoordinator {
     }
 
     func applicationDidBecomeActive() {
+        guard CloudSyncFeature.isEnabled else { return }
         self.scheduleResume(debounce: false)
     }
 

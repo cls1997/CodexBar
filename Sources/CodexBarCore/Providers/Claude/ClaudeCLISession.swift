@@ -343,7 +343,7 @@ actor ClaudeCLISession {
         proc.currentDirectoryURL = workingDirectory
         var env = sessionIdentity.environment
         env["PWD"] = workingDirectory.path
-        proc.environment = env
+        proc.environment = ApplicationNetworkProxy.childEnvironment(env)
 
         guard TTYCommandRunner.beginActiveProcessLaunchForAppShutdown() else {
             try? primaryHandle.close()

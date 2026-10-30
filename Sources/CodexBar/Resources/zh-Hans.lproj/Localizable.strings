@@ -2752,3 +2752,30 @@
 "Show this Mac's recorded OpenCode usage in Codex history. Off by default; scoped or alternate CODEX_HOME locations always stay excluded." = "在 Codex 历史记录中显示此 Mac 上记录的 OpenCode 用量。默认关闭；始终排除限定范围或其他 CODEX_HOME 位置。";
 "Auto uses the active saved session, otherwise an API key or browser cookies." = "自动使用当前启用的已保存会话，否则使用 API 密钥或浏览器 Cookie。";
 "Store multiple Command Code subscription sessions." = "存储多个 Command Code 订阅会话。";
+
+/* Application proxy */
+"proxy_system_components_paused" = "此版本已停用内置更新和 iCloud 同步。请通过你维护的 Homebrew tap 更新。";
+"Bypass addresses" = "绕过地址";
+"proxy_external_tools_coverage" = "外部工具会收到代理环境变量。不遵循这些变量的工具及外部浏览器不受此设置控制；这不是全系统 VPN。";
+"Network & Proxy" = "网络与代理";
+"Password (leave blank to keep saved password)" = "密码（留空保留已保存密码）";
+"proxy_password_storage" = "密码保存在 macOS 钥匙串中，不会写入偏好设置或导出的配置。";
+"Port" = "端口";
+"Proxy server" = "代理服务器";
+"Proxy test failed." = "代理连接测试失败。";
+"Proxy test failed: unexpected server response." = "代理测试失败：服务器返回异常响应。";
+"Proxy test succeeded." = "代理连接测试成功。";
+"Proxy type" = "代理类型";
+"Remove saved proxy password" = "移除已保存的代理密码";
+"proxy_restart_required" = "保存后请重启 CodexBar。重启前，已有连接仍使用旧设置。";
+"proxy_scope_description" = "所有服务、内嵌网页及支持代理的辅助工具共用一份代理配置。";
+"Save proxy settings" = "保存代理设置";
+"Saved. Restart CodexBar to apply the proxy settings." = "已保存。请重启 CodexBar 使代理设置生效。";
+"proxy_bypass_help" = "以逗号分隔主机或域名模式。默认绕过本机服务。";
+"Server" = "服务器";
+"proxy_tls_policy" = "始终验证 TLS 证书。代理连接失败时不会自动改为直连。";
+"Test connection" = "测试连接";
+"Use an application proxy" = "启用应用代理";
+"Username (optional)" = "用户名（可选）";
+
+"updates_managed_by_homebrew" = "内置更新已停用，请通过你的 Homebrew tap 更新。";

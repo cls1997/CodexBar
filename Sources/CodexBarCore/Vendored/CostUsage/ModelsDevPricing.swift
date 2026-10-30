@@ -656,7 +656,7 @@ protocol ModelsDevHTTPTransport: Sendable {
 
 struct URLSessionModelsDevTransport: ModelsDevHTTPTransport {
     func data(for request: URLRequest) async throws -> (Data, URLResponse) {
-        try await URLSession.shared.data(for: request)
+        try await ApplicationNetworkProxy.sharedSession.data(for: request)
     }
 }
 

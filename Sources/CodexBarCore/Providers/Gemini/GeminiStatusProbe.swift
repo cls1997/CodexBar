@@ -1417,7 +1417,7 @@ extension GeminiStatusProbe {
             purposes: [.tty, .nodeTooling],
             env: environment,
             loginPATH: LoginShellPathCache.shared.current)
-        process.environment = mergedEnvironment
+        process.environment = ApplicationNetworkProxy.childEnvironment(mergedEnvironment)
 
         let stdout = Pipe()
         let stderr = Pipe()

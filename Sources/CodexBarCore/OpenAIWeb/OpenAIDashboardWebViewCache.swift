@@ -521,6 +521,7 @@ final class OpenAIDashboardWebViewCache {
 
     private func makeWebView(websiteDataStore: WKWebsiteDataStore) -> (WKWebView, OffscreenWebViewHost) {
         let config = WKWebViewConfiguration()
+        ApplicationNetworkProxy.configure(websiteDataStore)
         config.websiteDataStore = websiteDataStore
         let userContentController = WKUserContentController()
         userContentController.addUserScript(WKUserScript(

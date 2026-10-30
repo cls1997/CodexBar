@@ -5,6 +5,7 @@ import SwiftUI
 /// Sidebar destinations of the settings window: fixed app panes plus one entry per provider.
 enum SettingsPane: Hashable {
     case general
+    case networkProxy
     case iCloudSync
     case usageSpend
     case notifications
@@ -29,6 +30,7 @@ enum SettingsPane: Hashable {
 
     var title: String {
         switch self {
+        case .networkProxy: L("Network & Proxy")
         case .general: L("tab_general")
         case .iCloudSync: L("iCloud Sync")
         case .usageSpend: L("tab_usage_spend")
@@ -241,10 +243,12 @@ struct PreferencesView: View {
     @ViewBuilder
     private var detailView: some View {
         switch self.selection.pane {
+        case .networkProxy:
+            NetworkProxyPane()
         case .general:
             GeneralPane(settings: self.settings)
         case .iCloudSync:
-            ICloudSyncPane(settings: self.settings, state: self.cloudSyncState)
+            GeneralPane(settings: self.settings)
         case .usageSpend:
             SpendDashboardPane(settings: self.settings, store: self.store)
         case .notifications:
@@ -278,6 +282,10 @@ struct PreferencesView: View {
     }
 
     private func ensureValidSelection() {
+        if !CloudSyncFeature.isEnabled {
+            if self.selection.pane == .iCloudSync { self.selection.pane = .general }
+            self.selection.removeFromHistory { $0 == .iCloudSync }
+        }
         guard !self.settings.debugMenuEnabled else { return }
         if self.selection.pane == .debug {
             self.selection.pane = .general

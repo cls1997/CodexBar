@@ -415,7 +415,7 @@ public enum WayfinderUsageFetcher {
     }
 
     private static let isolatedTransport: any ProviderHTTPTransport = {
-        let configuration = URLSessionConfiguration.ephemeral
+        let configuration = ApplicationNetworkProxy.configuration(.ephemeral)
         configuration.httpCookieStorage = nil
         configuration.httpShouldSetCookies = false
         configuration.urlCache = nil

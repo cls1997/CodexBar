@@ -2728,3 +2728,30 @@
 "Show this Mac's recorded OpenCode usage in Codex history. Off by default; scoped or alternate CODEX_HOME locations always stay excluded." = "이 Mac에 기록된 OpenCode 사용량을 Codex 기록에 표시합니다. 기본적으로 꺼져 있으며, 범위가 제한된 CODEX_HOME 위치나 대체 위치는 항상 제외됩니다.";
 "Auto uses the active saved session, otherwise an API key or browser cookies." = "자동은 활성 저장된 세션을 사용하며, 활성 세션이 없으면 API 키 또는 브라우저 쿠키를 사용합니다.";
 "Store multiple Command Code subscription sessions." = "Command Code 구독 세션을 여러 개 저장합니다.";
+
+/* Application proxy */
+"proxy_system_components_paused" = "Built-in updates and iCloud sync are disabled in this build. Manage updates with your Homebrew tap.";
+"Bypass addresses" = "Bypass addresses";
+"proxy_external_tools_coverage" = "External tools receive proxy environment variables. Tools that ignore them and external browsers are outside this setting; this is not a system-wide VPN.";
+"Network & Proxy" = "Network & Proxy";
+"Password (leave blank to keep saved password)" = "Password (leave blank to keep saved password)";
+"proxy_password_storage" = "Passwords are stored in macOS Keychain, not in preferences or exported settings.";
+"Port" = "Port";
+"Proxy server" = "Proxy server";
+"Proxy test failed." = "Proxy test failed.";
+"Proxy test failed: unexpected server response." = "Proxy test failed: unexpected server response.";
+"Proxy test succeeded." = "Proxy test succeeded.";
+"Proxy type" = "Proxy type";
+"Remove saved proxy password" = "Remove saved proxy password";
+"proxy_restart_required" = "Restart CodexBar after saving. Existing connections keep their previous settings until restart.";
+"proxy_scope_description" = "Route all providers, embedded web pages and supported helper tools through one proxy.";
+"Save proxy settings" = "Save proxy settings";
+"Saved. Restart CodexBar to apply the proxy settings." = "Saved. Restart CodexBar to apply the proxy settings.";
+"proxy_bypass_help" = "Separate hosts or domain patterns with commas. Local services bypass the proxy by default.";
+"Server" = "Server";
+"proxy_tls_policy" = "TLS certificate verification stays enabled. Proxy connections do not fall back to a direct connection on failure.";
+"Test connection" = "Test connection";
+"Use an application proxy" = "Use an application proxy";
+"Username (optional)" = "Username (optional)";
+
+"updates_managed_by_homebrew" = "Built-in updates are disabled. Update using your Homebrew tap.";

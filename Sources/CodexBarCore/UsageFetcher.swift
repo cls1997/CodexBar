@@ -987,7 +987,7 @@ private final class CodexRPCClient: @unchecked Sendable {
             env: env,
             loginPATH: loginPATH)
 
-        self.process.environment = env
+        self.process.environment = ApplicationNetworkProxy.childEnvironment(env)
         self.process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
         self.process.arguments = [resolvedExec] + arguments
         self.process.standardInput = self.stdin.pipe

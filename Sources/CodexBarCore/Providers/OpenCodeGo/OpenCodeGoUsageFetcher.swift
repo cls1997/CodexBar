@@ -83,7 +83,7 @@ public struct OpenCodeGoUsageFetcher: Sendable {
 
     private static let redirectGuardDelegate = RedirectGuardDelegate()
     private static let redirectGuardSession: URLSession = {
-        let configuration = URLSessionConfiguration.ephemeral
+        let configuration = ApplicationNetworkProxy.configuration(.ephemeral)
         configuration.httpCookieStorage = nil
         return URLSession(
             configuration: configuration,
