@@ -409,20 +409,19 @@ struct CloudSyncSettingsTests {
     }
 
     @Test
-    func `queued preferences import at coordinator startup becomes a local edit`() async throws {
+    func `queued preferences import remains local while cloud sync is disabled`() throws {
         let fixture = try self.makeFixture("queued-preferences")
         let persistence = self.makePersistence("queued-preferences")
+        let importedHidePersonalInfo = !fixture.store.hidePersonalInfo
         var document = PreferencesDocument()
-        try document.set("hidePersonalInfo", !fixture.store.hidePersonalInfo)
+        try document.set("hidePersonalInfo", importedHidePersonalInfo)
         try document.queueImport(in: fixture.defaults)
         let coordinator = CloudSyncCoordinator(settings: fixture.store, persistence: persistence)
         coordinator.start()
         defer { coordinator.stop() }
-        let deadline = ContinuousClock.now.advanced(by: .seconds(5))
-        while !persistence.load().preferencesDirty, ContinuousClock.now < deadline {
-            try await Task.sleep(for: .milliseconds(20))
-        }
-        #expect(persistence.load().preferencesDirty)
+        #expect(!CloudSyncFeature.isEnabled)
+        #expect(fixture.store.hidePersonalInfo == importedHidePersonalInfo)
+        #expect(!persistence.load().preferencesDirty)
         #expect(fixture.defaults.data(forKey: PreferencesDocument.pendingImportKey) == nil)
     }
 
@@ -453,7 +452,7 @@ struct CloudSyncSettingsTests {
     }
 
     @Test
-    func `CLI style file edit queues exactly that provider`() async throws {
+    func `CLI style file edit stays local while cloud sync is disabled`() async throws {
         let fixture = try self.makeFixture("dirty-file-provider")
         let persistence = self.makePersistence("dirty-file-provider")
         let coordinator = CloudSyncCoordinator(settings: fixture.store, persistence: persistence)
@@ -466,7 +465,9 @@ struct CloudSyncSettingsTests {
         try fixture.store.configStore.save(updated)
 
         let deadline = ContinuousClock.now.advanced(by: .seconds(10))
-        while persistence.load().dirtyProviders.isEmpty, ContinuousClock.now < deadline {
+        while fixture.store.configSnapshot.providerConfig(for: .claude)?.extrasEnabled != claude.extrasEnabled,
+              ContinuousClock.now < deadline
+        {
             try await Task.sleep(for: .milliseconds(20))
         }
         #expect(fixture.store.configSnapshot.providerConfig(for: .claude)?.extrasEnabled == claude.extrasEnabled)
@@ -475,7 +476,8 @@ struct CloudSyncSettingsTests {
         let recordNames = CloudSyncDirtyState.configurationRecordNamesToQueue(
             envelope: envelope,
             configuredProviders: updated.providers.map(\.id))
-        #expect(recordNames == [ProviderIntentPayload.recordName(for: .claude)])
+        #expect(!CloudSyncFeature.isEnabled)
+        #expect(recordNames.isEmpty)
     }
 
     @Test
