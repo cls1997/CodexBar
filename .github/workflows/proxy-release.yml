@@ -1,0 +1,86 @@
+name: Proxy Release
+run-name: Proxy Release ${{ inputs.tag || github.ref_name }}
+on:
+  push:
+    tags: ['v*-proxy.*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing vX.Y.Z-proxy.N tag
+        required: true
+        type: string
+      dry_run:
+        description: Build and verify without publishing
+        type: boolean
+        default: true
+permissions: {}
+concurrency:
+  group: proxy-release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+env:
+  RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+jobs:
+  build:
+    if: github.repository == 'cls1997/CodexBar'
+    runs-on: macos-26
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      commit: ${{ steps.version.outputs.commit }}
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
+      ARCHES: arm64
+      CODEXBAR_SIGNING: adhoc
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate tagged source and release metadata
+        id: version
+        run: python3 .github/scripts/proxy_release.py validate --tag "$RELEASE_TAG"
+      - name: Verify toolchain
+        run: |
+          test "$(uname -m)" = arm64
+          xcodebuild -version
+          swift --version
+      - name: Test release policy
+        run: python3 -m unittest discover -s .github/scripts -p 'test_*.py' -v
+      - name: Check repository contracts
+        run: make check
+      - name: Run focused proxy and configuration tests
+        run: ./Scripts/test_fast.sh --filter 'ApplicationProxySettingsTests|CodexOAuthRequestTests|ProviderHTTPClientTests|PreferencesSelectionTests'
+      - name: Package locally signed application
+        run: ./Scripts/package_app.sh release
+      - name: Verify bundle and prepare immutable release assets
+        run: python3 .github/scripts/proxy_release.py prepare --tag "$RELEASE_TAG"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: proxy-release-${{ steps.version.outputs.version }}
+          path: .release-dist/
+          if-no-files-found: error
+          retention-days: 14
+  publish:
+    needs: build
+    if: github.event_name == 'push' || !inputs.dry_run
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.build.outputs.commit }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: proxy-release-${{ needs.build.outputs.version }}
+          path: .release-dist/
+      - name: Publish GitHub Release in this fork
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/proxy_release.py publish --tag "$RELEASE_TAG"
