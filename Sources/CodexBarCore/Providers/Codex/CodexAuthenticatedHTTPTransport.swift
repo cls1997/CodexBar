@@ -40,7 +40,7 @@ enum CodexAuthenticatedHTTPTransport {
     }
 
     static func makeConfiguration() -> URLSessionConfiguration {
-        let configuration = URLSessionConfiguration.ephemeral
+        let configuration = ApplicationNetworkProxy.configuration(.ephemeral)
         configuration.urlCache = nil
         configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
         configuration.httpCookieStorage = nil

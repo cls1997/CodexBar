@@ -31,7 +31,7 @@ enum CLILoginRunner {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
         process.arguments = [executable, "login"]
-        process.environment = environment
+        process.environment = ApplicationNetworkProxy.childEnvironment(environment)
 
         let stdout = Pipe()
         let stderr = Pipe()

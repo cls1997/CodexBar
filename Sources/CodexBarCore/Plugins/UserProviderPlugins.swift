@@ -527,7 +527,7 @@ final class UserProviderPluginHTTPClient: NSObject, ProviderHTTPTransport, URLSe
     /// URLSession retains its delegate until finishTasksAndInvalidate(). A stored
     /// session would pin this client after the plugin runtime released it.
     private func makeSession() -> URLSession {
-        let configuration = URLSessionConfiguration.ephemeral
+        let configuration = ApplicationNetworkProxy.configuration(.ephemeral)
         configuration.httpCookieStorage = nil
         configuration.httpShouldSetCookies = false
         configuration.urlCredentialStorage = nil

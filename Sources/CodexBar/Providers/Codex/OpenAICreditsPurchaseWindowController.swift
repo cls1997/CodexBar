@@ -417,6 +417,7 @@ final class OpenAICreditsPurchaseWindowController: NSWindowController, WKNavigat
             forAccountEmail: self.accountEmail,
             scope: self.cacheScope)
 
+        ApplicationNetworkProxy.configure(config.websiteDataStore)
         let webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = self
         webView.allowsBackForwardNavigationGestures = true

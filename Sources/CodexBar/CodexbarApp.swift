@@ -34,6 +34,11 @@ enum CodexBarEntryPoint {
         guard CodexBarLaunchMode.resolve(arguments: CommandLine.arguments) == .application else {
             return
         }
+        KeychainAccessGate.isDisabled = SettingsStore.loadDebugDisableKeychainAccess(userDefaults: .standard)
+        let proxy = ApplicationProxySettings.load(defaults: .standard)
+        let proxyPassword = proxy.enabled && !proxy.username.isEmpty
+            ? (try? ApplicationProxyPasswordStore.load()) ?? "" : ""
+        ApplicationNetworkProxy.configure(settings: proxy, password: proxyPassword)
         TerminalLauncher().cleanUpAbandonedConfigs()
         CodexBarApp.main()
     }
@@ -343,29 +348,13 @@ private func isDeveloperIDSigned(bundleURL: URL) -> Bool {
 }
 
 @MainActor
-private func makeUpdaterController() -> UpdaterProviding {
-    let bundleURL = Bundle.main.bundleURL
-    guard bundleURL.pathExtension == "app" else {
-        return DisabledUpdaterController(unavailableReason: "Updates unavailable in this build.")
-    }
-
-    if InstallOrigin.isHomebrewCask(appBundleURL: bundleURL) {
-        return HomebrewUpdaterController(
-            savedAutoCheck: (UserDefaults.standard.object(forKey: "autoUpdateEnabled") as? Bool) ?? true,
-            notifier: HomebrewUpdateNotifier(dependencies: .live))
-    }
-
-    guard isDeveloperIDSigned(bundleURL: bundleURL) else {
-        return DisabledUpdaterController(unavailableReason: "Updates unavailable in this build.")
-    }
-
-    // Both choices default to on for first launch; Sparkle preserves the saved automatic-install choice.
-    return SparkleUpdaterController(
-        savedAutoCheck: (UserDefaults.standard.object(forKey: "autoUpdateEnabled") as? Bool) ?? true)
+func makeUpdaterController() -> UpdaterProviding {
+    DisabledUpdaterController(unavailableReason: L("updates_managed_by_homebrew"))
 }
 #else
-private func makeUpdaterController() -> UpdaterProviding {
-    DisabledUpdaterController()
+@MainActor
+func makeUpdaterController() -> UpdaterProviding {
+    DisabledUpdaterController(unavailableReason: L("updates_managed_by_homebrew"))
 }
 #endif
 

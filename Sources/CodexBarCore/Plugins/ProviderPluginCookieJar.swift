@@ -161,7 +161,7 @@ struct ProviderPluginCookieTransport: ProviderHTTPTransport {
     let jar: ProviderPluginCookieJar
     let id: String
     private static let session: URLSession = {
-        let configuration = URLSessionConfiguration.ephemeral
+        let configuration = ApplicationNetworkProxy.configuration(.ephemeral)
         configuration.httpCookieStorage = nil
         configuration.httpShouldSetCookies = false
         configuration.urlCredentialStorage = nil

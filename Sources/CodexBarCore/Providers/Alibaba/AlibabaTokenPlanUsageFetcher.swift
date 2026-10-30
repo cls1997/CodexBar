@@ -125,11 +125,11 @@ public struct AlibabaTokenPlanUsageFetcher: Sendable {
         } else {
             let dashboardDiagnostics = RedirectDiagnostics(cookieHeader: normalizedDashboardHeader)
             apiSession = URLSession(
-                configuration: .default,
+                configuration: ApplicationNetworkProxy.configuration(.default),
                 delegate: apiRedirectDiagnostics,
                 delegateQueue: nil)
             dashboardSession = URLSession(
-                configuration: .default,
+                configuration: ApplicationNetworkProxy.configuration(.default),
                 delegate: dashboardDiagnostics,
                 delegateQueue: nil)
             dashboardRedirectDiagnostics = dashboardDiagnostics

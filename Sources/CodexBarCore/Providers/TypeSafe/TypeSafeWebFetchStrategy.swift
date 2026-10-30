@@ -57,7 +57,7 @@ final class TypeSafeWebFetchStrategy: ProviderFetchStrategy, @unchecked Sendable
             delegateQueue: nil))
 
     static func makeConfiguration() -> URLSessionConfiguration {
-        let configuration = URLSessionConfiguration.ephemeral
+        let configuration = ApplicationNetworkProxy.configuration(.ephemeral)
         configuration.timeoutIntervalForRequest = 30
         configuration.timeoutIntervalForResource = 90
         configuration.httpCookieStorage = nil

@@ -128,7 +128,7 @@ public final class CurrencyExchange: @unchecked Sendable {
         guard let url = URL(string: "https://open.er-api.com/v6/latest/USD") else { return }
 
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await ApplicationNetworkProxy.sharedSession.data(from: url)
             guard (response as? HTTPURLResponse)?.statusCode == 200 else { return }
 
             struct ExchangeResponse: Decodable {

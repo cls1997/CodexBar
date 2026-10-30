@@ -204,7 +204,7 @@ enum AntigravityScopedAgyStaging {
         var request = URLRequest(url: AntigravityOAuthConfig.userInfoURL)
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         request.timeoutInterval = min(timeout, 15)
-        let configuration = URLSessionConfiguration.ephemeral
+        let configuration = ApplicationNetworkProxy.configuration(.ephemeral)
         configuration.timeoutIntervalForRequest = request.timeoutInterval
         configuration.timeoutIntervalForResource = request.timeoutInterval
         let session = ProviderHTTPClient.redirectGuardedSession(configuration: configuration)

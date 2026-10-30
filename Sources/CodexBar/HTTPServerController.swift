@@ -1,3 +1,4 @@
+import CodexBarCore
 import Foundation
 import Observation
 
@@ -93,7 +94,7 @@ final class HTTPServerController {
         process.arguments = self.configuration.arguments
         var environment = ProcessInfo.processInfo.environment
         environment["CODEXBAR_DASHBOARD_TOKEN"] = self.configuration.token
-        process.environment = environment
+        process.environment = ApplicationNetworkProxy.childEnvironment(environment)
         process.standardInput = FileHandle.nullDevice
         process.standardOutput = FileHandle.nullDevice
         let pipe = Pipe()

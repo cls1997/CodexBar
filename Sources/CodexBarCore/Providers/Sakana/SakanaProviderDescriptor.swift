@@ -51,7 +51,7 @@ public enum SakanaProviderDescriptor {
         .cookieHeader(SakanaSettingsReader.cookieHeaderKey),
     ])
     private static let transport: ProviderHTTPClient = {
-        let configuration = URLSessionConfiguration.ephemeral
+        let configuration = ApplicationNetworkProxy.configuration(.ephemeral)
         configuration.httpCookieStorage = nil
         configuration.httpShouldSetCookies = false
         return ProviderHTTPClient(session: ProviderHTTPClient.redirectGuardedSession(configuration: configuration))

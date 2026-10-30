@@ -6,6 +6,7 @@ extension SettingsPane {
     /// Stable token used to remember the selected pane across launches.
     var persistenceToken: String {
         switch self {
+        case .networkProxy: "networkProxy"
         case .general: "general"
         case .iCloudSync: "iCloudSync"
         case .usageSpend: "usageSpend"
@@ -23,6 +24,7 @@ extension SettingsPane {
 
     init?(persistenceToken: String) {
         switch persistenceToken {
+        case "networkProxy": self = .networkProxy
         case "general": self = .general
         case "iCloudSync": self = .iCloudSync
         case "usageSpend": self = .usageSpend
@@ -135,7 +137,9 @@ final class PreferencesSelection {
     init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
         let token = userDefaults.string(forKey: Self.paneDefaultsKey) ?? ""
-        self.destination = Destination(pane: SettingsPane(persistenceToken: token) ?? .general)
+        let restored = SettingsPane(persistenceToken: token) ?? .general
+        let pane: SettingsPane = restored == .iCloudSync && !CloudSyncFeature.isEnabled ? .general : restored
+        self.destination = Destination(pane: pane)
     }
 
     func requestAboutRoot() {

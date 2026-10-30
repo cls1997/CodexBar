@@ -5,6 +5,12 @@ import Foundation
 import Observation
 import Security
 
+/// This locally signed proxy edition intentionally has no iCloud integration.
+/// Keep persisted preferences and cloud data intact for compatibility with upstream builds.
+enum CloudSyncFeature {
+    static let isEnabled = false
+}
+
 enum SyncAvailability: Equatable, Sendable {
     case available
     case missingEntitlement
@@ -484,6 +490,11 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
     }
 
     func start(enabled: Bool) async {
+        guard CloudSyncFeature.isEnabled else {
+            self.state.availability = .restricted
+            self.state.status.lastError = "iCloud sync is disabled in this build."
+            return
+        }
         guard CloudSyncEntitlementGate.hasICloudServicesEntitlement() else {
             self.state.availability = .missingEntitlement
             return
@@ -494,6 +505,10 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
     }
 
     func setEnabled(_ enabled: Bool) async {
+        guard !enabled || CloudSyncFeature.isEnabled else {
+            self.state.status.lastError = "iCloud sync is disabled in this build."
+            return
+        }
         self.enabled = enabled
         guard enabled else {
             await self.stopEngine(clearPersistence: false)
@@ -644,6 +659,7 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
     }
 
     private func initializeEngineIfNeeded() async throws -> Bool {
+        guard CloudSyncFeature.isEnabled else { return false }
         guard self.engine == nil else { return false }
         // This is the first CKContainer access, and every path here has already passed the entitlement gate.
         let container = CKContainer(identifier: Self.containerIdentifier)

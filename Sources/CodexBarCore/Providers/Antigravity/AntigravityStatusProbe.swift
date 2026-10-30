@@ -854,7 +854,7 @@ public struct AntigravityStatusProbe: Sendable {
     /// socket-teardown race on Linux that can manifest as a use-after-free.
     /// See #2243 and swiftlang/swift-corelibs-foundation#4791.
     private static let localhostSession: URLSession = {
-        let config = URLSessionConfiguration.ephemeral
+        let config = ApplicationNetworkProxy.configuration(.ephemeral)
         config.timeoutIntervalForRequest = 30
         config.timeoutIntervalForResource = 120
         #if !os(Linux)

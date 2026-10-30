@@ -241,7 +241,7 @@ extension HomebrewUpdaterController.Dependencies {
             fetchCaskSource: {
                 var request = try URLRequest(url: cask().sourceURL, timeoutInterval: 20)
                 request.cachePolicy = .reloadIgnoringLocalCacheData
-                let (data, response) = try await URLSession.shared.data(for: request)
+                let (data, response) = try await ApplicationNetworkProxy.sharedSession.data(for: request)
                 guard (response as? HTTPURLResponse)?.statusCode == 200,
                       let source = String(data: data, encoding: .utf8)
                 else {
